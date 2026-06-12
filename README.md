@@ -8,7 +8,6 @@
     <a href="https://github.com/Adamantine-Guild/guildpass-sdk/actions"><img src="https://img.shields.io/github/actions/workflow/status/Adamantine-Guild/guildpass-sdk/test.yml?branch=main&style=flat-square" alt="build status" /></a>
     <a href="https://opensource.org/licenses/MIT"><img src="https://img.shields.io/badge/license-MIT-blue?style=flat-square" alt="license" /></a>
     <a href="https://typescriptlang.org"><img src="https://img.shields.io/badge/typescript-%23007acc.svg?style=flat-square&logo=typescript&logoColor=white" alt="typescript" /></a>
-    <a href="https://contribute.grantfox.xyz"><img src="https://img.shields.io/badge/GrantFox-open%20for%20contributions-orange?style=flat-square" alt="GrantFox" /></a>
   </p>
 
   <p align="center">
@@ -150,18 +149,17 @@ pnpm docs
 - [ ] **React**: Official `@guildpass/react` hooks package.
 - [ ] **Caching**: Pluggable caching layer for high-performance apps.
 
-## 🤝 Contributing via GrantFox
+## 🤝 Contributing
 
-This repository is listed on **[GrantFox](https://contribute.grantfox.xyz)** for open contributions.
-
-### How to contribute
+We welcome contributions from the community! See [CONTRIBUTING.md](./CONTRIBUTING.md) for the full guide.
 
 1. Browse open issues tagged [`good first issue`](https://github.com/Adamantine-Guild/guildpass-sdk/issues?q=label%3A%22good+first+issue%22) or [`help wanted`](https://github.com/Adamantine-Guild/guildpass-sdk/issues?q=label%3A%22help+wanted%22).
-2. Apply for an issue on [GrantFox](https://contribute.grantfox.xyz) or comment on the GitHub issue.
+2. Comment on the GitHub issue you'd like to work on.
 3. Fork the repo, create a feature branch, implement your change, open a PR.
-4. See [CONTRIBUTING.md](./CONTRIBUTING.md) for the full guide.
 
-**Maintainer resources**: [Maintainer app](https://maintainer.grantfox.xyz) · [GrantFox docs](https://docs.grantfox.xyz) · maintainers@guildpass.xyz
+### Maintainer contact
+
+- Contact: maintainers@guildpass.xyz
 
 ## 📄 License
 

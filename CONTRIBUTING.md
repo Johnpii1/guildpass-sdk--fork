@@ -1,12 +1,12 @@
 # Contributing to GuildPass SDK
 
-Thank you for your interest in contributing to the GuildPass SDK! This is the official TypeScript SDK for the GuildPass protocol, listed on [GrantFox](https://contribute.grantfox.xyz) for open contributions.
+Thank you for your interest in contributing to the GuildPass SDK! This is the official TypeScript SDK for the GuildPass protocol.
 
 ## Table of Contents
 
 - [Code of Conduct](#code-of-conduct)
 - [Ways to Contribute](#ways-to-contribute)
-- [Finding Issues via GrantFox](#finding-issues-via-grantfox)
+- [Finding Issues](#finding-issues)
 - [Development Setup](#development-setup)
 - [Coding Standards](#coding-standards)
 - [Branching & Commits](#branching--commits)
@@ -35,17 +35,13 @@ By participating you agree to our [Code of Conduct](./CODE_OF_CONDUCT.md).
 
 ---
 
-## Finding Issues via GrantFox
+## Finding Issues
 
-1. Visit the [GrantFox contributor app](https://contribute.grantfox.xyz) and find the **Adamantine-Guild / guildpass-sdk** project.
-2. Browse issues tagged `good first issue` or `help wanted`.
-3. Apply for an issue on GrantFox, or comment `I'd like to work on this` on the GitHub issue.
-4. Wait for a maintainer to assign it before starting — this avoids duplicate effort.
-
-Direct GitHub filters:
-
-- [`good first issue`](https://github.com/Adamantine-Guild/guildpass-sdk/issues?q=label%3A%22good+first+issue%22)
-- [`help wanted`](https://github.com/Adamantine-Guild/guildpass-sdk/issues?q=label%3A%22help+wanted%22)
+1. Browse issues directly on GitHub:
+   - [`good first issue`](https://github.com/Adamantine-Guild/guildpass-sdk/issues?q=label%3A%22good+first+issue%22)
+   - [`help wanted`](https://github.com/Adamantine-Guild/guildpass-sdk/issues?q=label%3A%22help+wanted%22)
+2. Comment `I'd like to work on this` on the GitHub issue you'd like to work on.
+3. Wait for a maintainer to assign it before starting — this avoids duplicate effort.
 
 ---
 
@@ -150,4 +146,3 @@ pnpm build        # Build must succeed
 
 - GitHub Issues: preferred for all task discussion
 - Contact: maintainers@guildpass.xyz
-- [GrantFox maintainer app](https://maintainer.grantfox.xyz)

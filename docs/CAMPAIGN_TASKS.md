@@ -1,6 +1,6 @@
-# GrantFox Campaign Tasks — GuildPass SDK
+# GuildPass SDK Tasks
 
-This document lists tasks suitable for **GrantFox campaign contributions**.
+This document lists tasks suitable for open contributions.
 
 ---
 
@@ -93,4 +93,4 @@ This document lists tasks suitable for **GrantFox campaign contributions**.
 
 ---
 
-_To apply for a task, visit [GrantFox](https://contribute.grantfox.xyz) or comment on the linked GitHub issue._
+*To work on a task, comment on the linked GitHub issue.*
