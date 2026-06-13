@@ -12,7 +12,7 @@ If you discover a security vulnerability in the GuildPass SDK, **do not** open a
 
 ### How to report
 
-1. **Email** **maintainers@guildpass.xyz** with subject `[SECURITY] guildpass-sdk — <brief description>`.
+1. **Email** **cerealboxx123@gmail.com** with subject `[SECURITY] guildpass-sdk — <brief description>`.
 2. Include:
    - Description of the vulnerability
    - Steps or code to reproduce it
