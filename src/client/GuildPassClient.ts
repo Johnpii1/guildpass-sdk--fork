@@ -3,7 +3,7 @@ import { AccessService } from '../access/access.service';
 // GuildPass SDK: Import external module dependencies.
 import { DEFAULT_CONFIG } from '../config/defaultConfig';
 // GuildPass SDK: Pull in package or module bindings.
-import { GuildPassClientConfig } from '../config/sdkConfig';
+import { GuildPassClientConfig, validateConfig } from '../config/sdkConfig';
 // GuildPass SDK: Import external module dependencies.
 import { ContractClient } from '../contracts/contractClient';
 // GuildPass SDK: Pull in package or module bindings.
@@ -41,6 +41,7 @@ export class GuildPassClient {
 
   // GuildPass SDK: Class member structure property or constructor.
   constructor(config: GuildPassClientConfig) {
+    validateConfig(config);
     // GuildPass SDK: Execution block boundary initialization.
     this.config = {
       ...DEFAULT_CONFIG,

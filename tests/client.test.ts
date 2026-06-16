@@ -2,6 +2,8 @@
 import { describe, it, expect } from 'vitest';
 // GuildPass SDK: Import external module dependencies.
 import { GuildPassClient } from '../src/client/GuildPassClient';
+import { GuildPassError } from '../src/errors/GuildPassError';
+import { GuildPassErrorCode } from '../src/errors/errorCodes';
 
 // GuildPass SDK: Test suite container block.
 describe('GuildPassClient', () => {
@@ -46,4 +48,33 @@ describe('GuildPassClient', () => {
     // GuildPass SDK: End of logic containment structure block.
   });
   // GuildPass SDK: End of logic containment structure block.
+});
+
+describe('GuildPassClient config validation', () => {
+  it('should throw when apiUrl is missing', () => {
+    expect(() => new GuildPassClient({ apiUrl: '' }))
+      .toThrow(GuildPassError);
+    expect(() => new GuildPassClient({ apiUrl: '' }))
+      .toThrow(expect.objectContaining({ code: GuildPassErrorCode.INVALID_CONFIG }));
+  });
+
+  it('should throw when apiUrl is an invalid URL', () => {
+    expect(() => new GuildPassClient({ apiUrl: 'not-a-url' }))
+      .toThrow(expect.objectContaining({ code: GuildPassErrorCode.INVALID_CONFIG }));
+  });
+
+  it('should throw when timeoutMs is zero', () => {
+    expect(() => new GuildPassClient({ apiUrl: 'https://api.guildpass.xyz', timeoutMs: 0 }))
+      .toThrow(expect.objectContaining({ code: GuildPassErrorCode.INVALID_CONFIG }));
+  });
+
+  it('should throw when timeoutMs is negative', () => {
+    expect(() => new GuildPassClient({ apiUrl: 'https://api.guildpass.xyz', timeoutMs: -1 }))
+      .toThrow(expect.objectContaining({ code: GuildPassErrorCode.INVALID_CONFIG }));
+  });
+
+  it('should not throw for valid config', () => {
+    expect(() => new GuildPassClient({ apiUrl: 'https://api.guildpass.xyz', timeoutMs: 5000 }))
+      .not.toThrow();
+  });
 });
