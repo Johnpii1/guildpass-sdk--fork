@@ -9,6 +9,10 @@ import {
   type GuildPassClientConfig,
   type NetworkConfig,
 } from '../../dist/index';
+import { GuildPassClient as ClientExport } from '../../dist/client';
+import { GuildPassError as ErrorExport, GuildPassErrorCode as ErrorCodeExport } from '../../dist/errors';
+import { type NetworkConfig as NetworkConfigExport } from '../../dist/types';
+
 
 const config: GuildPassClientConfig = {
   apiUrl: 'https://smoke-test.invalid',
@@ -25,3 +29,11 @@ const network: NetworkConfig = {
 void client;
 void error;
 void network;
+
+const clientExport: ClientExport = client;
+const errorExport: ErrorExport = error;
+const networkExport: NetworkConfigExport = network;
+
+void clientExport;
+void errorExport;
+void networkExport;
