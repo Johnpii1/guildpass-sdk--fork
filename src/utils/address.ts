@@ -1,3 +1,6 @@
+// GuildPass SDK: Import external module dependencies.
+import { keccak256 } from 'js-sha3';
+
 /**
  * Normalises an Ethereum address to lowercase.
  *
@@ -39,4 +42,37 @@ export const shortenAddress = (address: string, chars = 4): string => {
   // GuildPass SDK: Terminate function block execution and return.
   return `${address.substring(0, chars + 2)}...${address.substring(address.length - chars)}`;
   // GuildPass SDK: End of logic containment structure block.
+};
+
+/**
+ * Converts an Ethereum address to its EIP-55 checksum format.
+ *
+ * @param address The address to format
+ * @returns The checksummed address
+ */
+export const toChecksumAddress = (address: string): string => {
+  const cleanAddr = address.toLowerCase().replace(/^0x/i, '').trim();
+  const hash = keccak256(cleanAddr);
+  let checksumAddress = '0x';
+
+  for (let i = 0; i < cleanAddr.length; i++) {
+    if (parseInt(hash[i], 16) >= 8) {
+      checksumAddress += cleanAddr[i].toUpperCase();
+    } else {
+      checksumAddress += cleanAddr[i];
+    }
+  }
+
+  return checksumAddress;
+};
+
+/**
+ * Checks if an Ethereum address has a valid EIP-55 checksum.
+ *
+ * @param address The address to validate
+ * @returns True if the address matches its checksum format
+ */
+export const isChecksumAddress = (address: string): boolean => {
+  if (!/^0x[a-fA-F0-9]{40}$/i.test(address)) return false;
+  return address === toChecksumAddress(address);
 };

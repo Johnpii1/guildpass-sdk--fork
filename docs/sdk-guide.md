@@ -41,14 +41,30 @@ The SDK works in Node.js 18+. If you are on an older version, you may need to po
 
 The SDK is tree-shakeable and optimized for modern browsers. It does not include any Node-only dependencies.
 
-## Address Normalization
+## Address Normalization and Checksums
 
-The SDK automatically normalizes addresses to lowercase for consistency. You can also use the exported utility:
+The SDK automatically normalizes addresses to lowercase for consistency and accepts both lowercase and mixed-case addresses by default.
+You can also use the exported utilities to format or strictly validate EIP-55 checksum addresses:
 
 ```typescript
-import { normaliseAddress } from '@guildpass/sdk';
+import {
+  normaliseAddress,
+  toChecksumAddress,
+  isChecksumAddress,
+  validateAddress,
+} from '@guildpass/sdk';
 
-const clean = normaliseAddress('0xABC...');
+// Convert to lowercase
+const clean = normaliseAddress('0xabc...');
+
+// Convert to EIP-55 Checksum
+const checksummed = toChecksumAddress('0xabc...');
+
+// Check if an address has a valid checksum
+const isValid = isChecksumAddress('0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045'); // true
+
+// Strict validation mode (throws if checksum is invalid)
+validateAddress('0xd8da...', { strict: true });
 ```
 
 ## Timeouts
