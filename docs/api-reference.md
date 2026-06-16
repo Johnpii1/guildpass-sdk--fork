@@ -1,5 +1,16 @@
 # API Reference
 
+## Import Paths
+
+The SDK supports tree-shakeable subpath imports. You can import focused modules directly to minimize your bundle size:
+
+- `@guildpass/sdk/client`: Main `GuildPassClient` class.
+- `@guildpass/sdk/errors`: Error classes and codes (`GuildPassError`, `GuildPassErrorCode`).
+- `@guildpass/sdk/utils`: Utility functions (`normaliseAddress`, `validateAddress`, `formatIsoDate`, etc.).
+- `@guildpass/sdk/types`: TypeScript definitions.
+
+You can also import everything from the root `@guildpass/sdk`.
+
 ## GuildPassClient
 
 The main constructor.

@@ -12,6 +12,10 @@ const {
   DEFAULT_CONFIG,
   SUPPORTED_NETWORKS,
 } = require('../../dist/index.js');
+const { GuildPassClient: ClientExport } = require('../../dist/client.js');
+const { GuildPassError: ErrorExport, GuildPassErrorCode: ErrorCodeExport } = require('../../dist/errors.js');
+const { normaliseAddress: normaliseExport } = require('../../dist/utils.js');
+
 
 function expectExport(name, value, expectedType) {
   if (typeof value !== expectedType) {
@@ -30,6 +34,12 @@ expectExport('validateAddress', validateAddress, 'function');
 expectExport('formatIsoDate', formatIsoDate, 'function');
 expectExport('DEFAULT_CONFIG', DEFAULT_CONFIG, 'object');
 expectExport('SUPPORTED_NETWORKS', SUPPORTED_NETWORKS, 'object');
+
+assert.equal(ClientExport, GuildPassClient, 'Subpath client export matches root export');
+assert.equal(ErrorExport, GuildPassError, 'Subpath error export matches root export');
+assert.equal(ErrorCodeExport, GuildPassErrorCode, 'Subpath error codes match root export');
+assert.equal(normaliseExport, normaliseAddress, 'Subpath utils export matches root export');
+
 
 const client = new GuildPassClient({ apiUrl: 'https://smoke-test.invalid' });
 assert.equal(client.getConfig().apiUrl, 'https://smoke-test.invalid');
