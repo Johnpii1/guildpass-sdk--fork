@@ -58,3 +58,26 @@ const client = new GuildPassClient({
   timeoutMs: 5000, // 5 seconds
 });
 ```
+
+## Observability Hooks
+
+The SDK supports optional request lifecycle hooks so you can integrate calls with logging, metrics, tracing, and debugging tools.
+
+```typescript
+const client = new GuildPassClient({
+  apiUrl: 'https://api.guildpass.xyz',
+  hooks: {
+    onRequest: ({ method, path }) => {
+      console.log('request started', method, path);
+    },
+    onResponse: ({ method, path, status, durationMs }) => {
+      console.log('request succeeded', method, path, status, durationMs);
+    },
+    onError: ({ method, path, error, durationMs }) => {
+      console.error('request failed', method, path, error.message, durationMs);
+    },
+  },
+});
+```
+
+Hook payloads expose safe request metadata only. Sensitive values like the API key and full request body are not included in hook payloads, and hook failures are logged without changing the normal SDK response behavior.

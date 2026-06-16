@@ -18,3 +18,26 @@ export type HttpResponse<T = any> = {
   headers: Headers;
   // GuildPass SDK: End of logic containment structure block.
 };
+
+// GuildPass SDK: Hook payloads for observability integration.
+export type RequestHookPayload = {
+  method: HttpMethod;
+  path: string;
+};
+
+export type ResponseHookPayload = RequestHookPayload & {
+  status: number;
+  durationMs: number;
+};
+
+export type ErrorHookPayload = RequestHookPayload & {
+  error: Error;
+  durationMs: number;
+};
+
+// GuildPass SDK: Lifecycle hooks interface.
+export interface HttpHooks {
+  onRequest?: (payload: RequestHookPayload) => void | Promise<void>;
+  onResponse?: (payload: ResponseHookPayload) => void | Promise<void>;
+  onError?: (payload: ErrorHookPayload) => void | Promise<void>;
+}

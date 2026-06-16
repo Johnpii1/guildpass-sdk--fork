@@ -3,7 +3,7 @@ import { GuildPassError } from '../errors/GuildPassError';
 // GuildPass SDK: Import external module dependencies.
 import { GuildPassErrorCode } from '../errors/errorCodes';
 // GuildPass SDK: Pull in package or module bindings.
-import { HttpRequestOptions, HttpResponse } from './http.types';
+import { HttpRequestOptions, HttpResponse, HttpHooks, RequestHookPayload } from './http.types';
 
 // GuildPass SDK: Exposed interface structure.
 export class HttpClient {
@@ -13,12 +13,15 @@ export class HttpClient {
   private readonly apiKey?: string;
   // GuildPass SDK: Class member structure property or constructor.
   private readonly timeoutMs: number;
+  // GuildPass SDK: Class member structure property or constructor.
+  private readonly hooks?: HttpHooks;
 
   // GuildPass SDK: Class member structure property or constructor.
-  constructor(baseUrl: string, apiKey?: string, timeoutMs = 10000) {
+  constructor(baseUrl: string, apiKey?: string, timeoutMs = 10000, hooks?: HttpHooks) {
     this.baseUrl = baseUrl.endsWith('/') ? baseUrl.slice(0, -1) : baseUrl;
     this.apiKey = apiKey;
     this.timeoutMs = timeoutMs;
+    this.hooks = hooks;
     // GuildPass SDK: End of logic containment structure block.
   }
 
@@ -54,6 +57,18 @@ export class HttpClient {
   ): Promise<HttpResponse<T>> {
     // GuildPass SDK: Define internal reference identifier.
     const { method = 'GET', headers = {}, body, params, timeoutMs = this.timeoutMs } = options;
+
+    // GuildPass SDK: Variable binding initialization.
+    const startTime = Date.now();
+    const hookPayload: RequestHookPayload = { method, path };
+
+    if (this.hooks?.onRequest) {
+      try {
+        await this.hooks.onRequest(hookPayload);
+      } catch (err) {
+        console.error('GuildPass SDK: onRequest hook failed', err);
+      }
+    }
 
     // GuildPass SDK: Variable binding initialization.
     const url = new URL(`${this.baseUrl}${path.startsWith('/') ? path : `/${path}`}`);
@@ -116,6 +131,15 @@ export class HttpClient {
 
       // GuildPass SDK: Variable binding initialization.
       const data = await response.json();
+      const durationMs = Date.now() - startTime;
+
+      if (this.hooks?.onResponse) {
+        try {
+          await this.hooks.onResponse({ ...hookPayload, status: response.status, durationMs });
+        } catch (err) {
+          console.error('GuildPass SDK: onResponse hook failed', err);
+        }
+      }
       // GuildPass SDK: Return evaluated output value.
       return {
         data,
@@ -127,30 +151,37 @@ export class HttpClient {
     } catch (error: any) {
       clearTimeout(timeoutId);
 
+      const durationMs = Date.now() - startTime;
+      let finalError = error;
+
       // GuildPass SDK: Verify constraint requirements before proceeding.
       if (error.name === 'AbortError') {
-        // GuildPass SDK: Raise exceptional condition and throw error.
-        throw new GuildPassError(
+        finalError = new GuildPassError(
           `Request timed out after ${timeoutMs}ms`,
           GuildPassErrorCode.TIMEOUT,
         );
-        // GuildPass SDK: End of logic containment structure block.
+      } else if (!(error instanceof GuildPassError)) {
+        finalError = new GuildPassError(
+          error.message || 'Unknown network error',
+          GuildPassErrorCode.HTTP_ERROR,
+          undefined,
+          error,
+        );
       }
 
       // GuildPass SDK: Evaluate branch condition logic.
-      if (error instanceof GuildPassError) {
-        throw error;
+      if (this.hooks?.onError) {
+        // GuildPass SDK: Execution block boundary initialization.
+        try {
+          await this.hooks.onError({ ...hookPayload, error: finalError, durationMs });
+        } catch (hookErr) {
+          console.error('GuildPass SDK: onError hook failed', hookErr);
+          // GuildPass SDK: End of logic containment structure block.
+        }
         // GuildPass SDK: End of logic containment structure block.
       }
 
-      // GuildPass SDK: Propagate error state with specific code description.
-      throw new GuildPassError(
-        error.message || 'Unknown network error',
-        GuildPassErrorCode.HTTP_ERROR,
-        undefined,
-        error,
-      );
-      // GuildPass SDK: End of logic containment structure block.
+      throw finalError;
     }
     // GuildPass SDK: End of logic containment structure block.
   }

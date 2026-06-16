@@ -1,3 +1,6 @@
+// GuildPass SDK: Import external module dependencies.
+import { HttpHooks } from '../http/http.types';
+
 // GuildPass SDK: Exported component definition.
 export type GuildPassClientConfig = {
   apiUrl: string;
@@ -6,5 +9,6 @@ export type GuildPassClientConfig = {
   contractAddress?: string;
   apiKey?: string;
   timeoutMs?: number;
+  hooks?: HttpHooks;
   // GuildPass SDK: End of logic containment structure block.
 };
