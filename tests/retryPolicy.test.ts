@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import {
   calculateRetryDelayMs,
+  createRetryPolicy,
   classifyHttpStatus,
   classifyRetryErrorCategory,
   parseRetryAfterMs,
@@ -35,13 +36,21 @@ describe('retry policy', () => {
   });
 
   it('rejects invalid retry configuration', () => {
-    expect(() => validateRetryPolicyOptions({ ...baseOptions, maxAttempts: 0 })).toThrow(RangeError);
+    expect(() => validateRetryPolicyOptions({ ...baseOptions, maxAttempts: 0 })).toThrow(
+      RangeError,
+    );
     expect(() => validateRetryPolicyOptions({ ...baseOptions, initialDelayMs: -1 })).toThrow(
       RangeError,
     );
-    expect(() => validateRetryPolicyOptions({ ...baseOptions, maxDelayMs: 50 })).toThrow(RangeError);
-    expect(() => validateRetryPolicyOptions({ ...baseOptions, multiplier: 0.5 })).toThrow(RangeError);
-    expect(() => validateRetryPolicyOptions({ ...baseOptions, jitterRatio: 1.1 })).toThrow(RangeError);
+    expect(() => validateRetryPolicyOptions({ ...baseOptions, maxDelayMs: 50 })).toThrow(
+      RangeError,
+    );
+    expect(() => validateRetryPolicyOptions({ ...baseOptions, multiplier: 0.5 })).toThrow(
+      RangeError,
+    );
+    expect(() => validateRetryPolicyOptions({ ...baseOptions, jitterRatio: 1.1 })).toThrow(
+      RangeError,
+    );
   });
 
   it('applies deterministic bounded jitter without exceeding maxDelayMs', () => {
@@ -94,6 +103,24 @@ describe('retry policy', () => {
       retryable: false,
       reason: 'non_retryable_error_category',
     });
+  });
+
+  it('creates a typed reusable policy with immutable overrides', () => {
+    const retryableStatuses = [409];
+    const policy = createRetryPolicy(baseOptions, { retryableStatuses });
+    retryableStatuses.length = 0;
+
+    expect(policy.options).toEqual(baseOptions);
+    expect(policy.calculateDelayMs(2)).toBe(200);
+    expect(policy.classifyHttpStatus(409)).toEqual({
+      retryable: true,
+      reason: 'retryable_status',
+    });
+    expect(policy.classifyErrorCategory('unknown')).toEqual({
+      retryable: false,
+      reason: 'non_retryable_error_category',
+    });
+    expect(policy.parseRetryAfterMs('1')).toBe(1_000);
   });
 
   it('parses retry-after seconds and HTTP dates into milliseconds', () => {
