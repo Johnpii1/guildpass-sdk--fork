@@ -30,6 +30,11 @@
       "types": "./dist/types.d.ts",
       "require": "./dist/types.js",
       "import": "./dist/types.mjs"
+    },
+    "./retry": {
+      "types": "./dist/retry.d.ts",
+      "require": "./dist/retry.js",
+      "import": "./dist/retry.mjs"
     }
   },
   "files": [
