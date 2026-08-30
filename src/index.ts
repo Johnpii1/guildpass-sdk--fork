@@ -28,3 +28,6 @@ export * from './config/sdkConfig';
 // Validation
 export * from './validation/responseGuards';
 export * from './validation/assertResponse';
+
+// Retry
+export * from './retry';

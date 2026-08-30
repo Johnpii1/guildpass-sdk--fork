@@ -7,6 +7,7 @@ export default defineConfig({
     errors: 'src/errors/index.ts',
     utils: 'src/utils/index.ts',
     types: 'src/types/index.ts',
+    retry: 'src/retry/index.ts',
   },
   format: ['cjs', 'esm'],
   dts: true,
