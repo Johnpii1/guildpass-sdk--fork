@@ -23,6 +23,17 @@ export interface RetryClassificationOverrides {
   nonRetryableErrorCategories?: readonly RetryErrorCategory[];
 }
 
+export interface RetryPolicy {
+  readonly options: RetryPolicyOptions;
+  calculateDelayMs(attemptNumber: number, randomSource?: RetryRandomSource): number;
+  classifyHttpStatus(status: number): RetryDecision;
+  classifyErrorCategory(category: RetryErrorCategory): RetryDecision;
+  parseRetryAfterMs(
+    retryAfter: string | number | Date | null | undefined,
+    now?: Date,
+  ): number | undefined;
+}
+
 export type RetryDecisionReason =
   | 'retryable_status'
   | 'non_retryable_status'
@@ -48,6 +59,39 @@ const DEFAULT_RETRYABLE_ERROR_CATEGORIES = new Set<RetryErrorCategory>([
   'server_error',
 ]);
 
+export function createRetryPolicy(
+  options: RetryPolicyOptions,
+  overrides: RetryClassificationOverrides = {},
+): RetryPolicy {
+  const validOptions = validateRetryPolicyOptions(options);
+  const normalizedOverrides: RetryClassificationOverrides = {
+    retryableStatuses: overrides.retryableStatuses ? [...overrides.retryableStatuses] : undefined,
+    nonRetryableStatuses: overrides.nonRetryableStatuses
+      ? [...overrides.nonRetryableStatuses]
+      : undefined,
+    retryableErrorCategories: overrides.retryableErrorCategories
+      ? [...overrides.retryableErrorCategories]
+      : undefined,
+    nonRetryableErrorCategories: overrides.nonRetryableErrorCategories
+      ? [...overrides.nonRetryableErrorCategories]
+      : undefined,
+  };
+
+  return {
+    options: validOptions,
+    calculateDelayMs(attemptNumber, randomSource) {
+      return calculateRetryDelayMs(attemptNumber, validOptions, randomSource);
+    },
+    classifyHttpStatus(status) {
+      return classifyHttpStatus(status, normalizedOverrides);
+    },
+    classifyErrorCategory(category) {
+      return classifyRetryErrorCategory(category, normalizedOverrides);
+    },
+    parseRetryAfterMs,
+  };
+}
+
 export function validateRetryPolicyOptions(options: RetryPolicyOptions): RetryPolicyOptions {
   assertPositiveInteger(options.maxAttempts, 'maxAttempts');
   assertFiniteNonNegative(options.initialDelayMs, 'initialDelayMs');
@@ -62,7 +106,11 @@ export function validateRetryPolicyOptions(options: RetryPolicyOptions): RetryPo
   }
 
   if (options.jitterRatio !== undefined) {
-    if (!Number.isFinite(options.jitterRatio) || options.jitterRatio < 0 || options.jitterRatio > 1) {
+    if (
+      !Number.isFinite(options.jitterRatio) ||
+      options.jitterRatio < 0 ||
+      options.jitterRatio > 1
+    ) {
       throw new RangeError('jitterRatio must be a finite number between 0 and 1');
     }
   }
@@ -82,7 +130,8 @@ export function calculateRetryDelayMs(
     throw new RangeError('attemptNumber must be less than or equal to maxAttempts');
   }
 
-  const exponentialDelay = validOptions.initialDelayMs * validOptions.multiplier ** (attemptNumber - 1);
+  const exponentialDelay =
+    validOptions.initialDelayMs * validOptions.multiplier ** (attemptNumber - 1);
   const cappedDelay = Math.min(exponentialDelay, validOptions.maxDelayMs);
   const jitterRatio = validOptions.jitterRatio ?? 0;
 
